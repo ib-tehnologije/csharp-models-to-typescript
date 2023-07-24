@@ -27,7 +27,6 @@ steps:
 
 - script: |
     yarn install
-    yarn build
   displayName: 'Build project'
 
 - task: Bash@3
