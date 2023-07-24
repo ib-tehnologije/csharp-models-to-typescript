@@ -24,7 +24,6 @@ steps:
 - task: NpmAuthenticate@0
   inputs:
     workingFile: '.npmrc'
-    customEndpoint: 'IBTechWebWidgetsFeed'
 
 - script: |
     yarn install
