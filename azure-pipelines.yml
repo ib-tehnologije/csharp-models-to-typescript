@@ -1,0 +1,43 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "##vso[build.updatebuildnumber]$(date +%Y%m%d.%H%M.%S)"
+
+- task: NpmAuthenticate@0
+  inputs:
+    workingFile: '.npmrc'
+    customEndpoint: 'IBTechWebWidgetsFeed'
+
+- script: |
+    yarn install
+    yarn build
+  displayName: 'Build project'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      npm version $(Build.BuildNumber) --no-git-tag-version
+  displayName: 'Update version number'
+
+- script: |
+    npm publish
+  displayName: 'Publish npm package'
